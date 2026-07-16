@@ -13,6 +13,10 @@ st.set_page_config(
 st.title("🤖 AI Resume Generator")
 st.write("Generate a professional ATS-friendly resume using AI.")
 
+# ===========================
+# Resume Form
+# ===========================
+
 with st.form("resume_form"):
 
     st.subheader("👤 Personal Information")
@@ -43,62 +47,90 @@ with st.form("resume_form"):
 
     education = st.text_area(
         "Education",
-        height=100
+        height=120,
+        placeholder="Example:\nB.Tech Artificial Intelligence and Data Science\nKarunya Institute of Technology\nCGPA : 7.2"
     )
 
-    st.subheader("🛠 Skills")
+    st.subheader("🛠 Technical Skills")
 
     skills = st.text_area(
-        "Skills (comma separated)",
-        height=100
+        "Skills (Comma Separated)",
+        height=120,
+        placeholder="Python, SQL, Docker, Machine Learning, Streamlit"
     )
 
     st.subheader("💼 Experience")
 
     experience = st.text_area(
         "Experience",
-        height=120
+        height=150,
+        placeholder="Mention internships or work experience..."
     )
 
     st.subheader("🚀 Projects")
 
     projects = st.text_area(
         "Projects",
-        height=120
+        height=150,
+        placeholder="Mention your important projects..."
     )
 
     st.subheader("🏆 Certifications")
 
     certifications = st.text_area(
         "Certifications",
-        height=100
+        height=120,
+        placeholder="Cisco, AWS, NPTEL..."
     )
 
     generate = st.form_submit_button("✨ Generate Resume")
 
+# ===========================
+# Resume Generation
+# ===========================
 
 if generate:
 
-    # Basic validation
-    if not name or not education or not skills:
-        st.error("Please fill in at least Name, Education and Skills.")
+    if not name.strip():
+
+        st.error("Please enter your name.")
+
+    elif not education.strip():
+
+        st.error("Please enter your education details.")
+
+    elif not skills.strip():
+
+        st.error("Please enter your technical skills.")
+
     else:
 
-        with st.spinner("🤖 AI is generating your ATS-friendly resume..."):
-
-            prompt = build_resume_prompt(
-                name=name,
-                email=email,
-                phone=phone,
-                target_role=target_role,
-                education=education,
-                skills=skills,
-                experience=experience,
-                projects=projects,
-                certifications=certifications
-            )
+        with st.spinner("🤖 AI is generating your professional resume..."):
 
             try:
+
+                prompt = build_resume_prompt(
+
+                    name=name,
+
+                    email=email,
+
+                    phone=phone,
+
+                    target_role=target_role,
+
+                    education=education,
+
+                    skills=skills,
+
+                    experience=experience,
+
+                    projects=projects,
+
+                    certifications=certifications
+
+                )
+
                 resume = generate_response(prompt)
 
                 st.success("✅ Resume Generated Successfully!")
@@ -109,15 +141,22 @@ if generate:
 
                 st.markdown(resume)
 
-                pdf_file = generate_resume_pdf(resume)
+                pdf = generate_resume_pdf(resume)
 
                 st.download_button(
+
                     label="📥 Download Resume (PDF)",
-                    data=pdf_file,
-                    file_name=f"{name.replace(' ', '_')}_AI_Resume.pdf",
+
+                    data=pdf,
+
+                    file_name=f"{name.replace(' ','_')}_Resume.pdf",
+
                     mime="application/pdf"
-)
+
+                )
 
             except Exception as e:
-                st.error("Failed to generate resume.")
+
+                st.error("❌ Failed to generate resume.")
+
                 st.exception(e)

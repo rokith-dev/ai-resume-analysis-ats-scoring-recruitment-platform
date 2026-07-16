@@ -1,107 +1,75 @@
-class ResumePromptBuilder:
+import re
+
+
+class ResumeParser:
     """
-    Builds prompts for the AI Resume Generator.
+    Parse the AI generated resume into structured sections.
     """
 
     @staticmethod
-    def build(
-        name,
-        email,
-        phone,
-        target_role,
-        education,
-        skills,
-        experience,
-        projects,
-        certifications,
-    ):
+    def parse(markdown_text):
 
-        prompt = f"""
-You are a Senior Resume Writer and ATS Optimization Expert.
+        sections = {
+            "summary": "",
+            "skills": [],
+            "experience": "",
+            "projects": "",
+            "education": "",
+            "certifications": "",
+            "strengths": ""
+        }
 
-Your task is to generate a professional ATS-friendly resume.
+        current_section = None
 
-IMPORTANT RULES
+        lines = markdown_text.split("\n")
 
-1. Do NOT invent any information.
-2. Only improve the wording.
-3. Keep the resume professional.
-4. Use concise bullet points.
-5. Use powerful action verbs.
-6. Tailor the resume for the target role.
-7. Highlight technical skills.
-8. Keep the resume ATS-friendly.
-9. Return ONLY Markdown.
-10. Use exactly the headings below.
+        for line in lines:
 
-Candidate Information
+            line = line.strip()
 
-Name:
-{name}
+            if not line:
+                continue
 
-Email:
-{email}
+            lower = line.lower()
 
-Phone:
-{phone}
+            if "professional summary" in lower:
+                current_section = "summary"
+                continue
 
-Target Role:
-{target_role}
+            elif "technical skills" in lower:
+                current_section = "skills"
+                continue
 
-Education:
-{education}
+            elif "professional experience" in lower:
+                current_section = "experience"
+                continue
 
-Skills:
-{skills}
+            elif lower == "# projects" or lower == "projects":
+                current_section = "projects"
+                continue
 
-Experience:
-{experience}
+            elif "education" in lower:
+                current_section = "education"
+                continue
 
-Projects:
-{projects}
+            elif "certifications" in lower:
+                current_section = "certifications"
+                continue
 
-Certifications:
-{certifications}
+            elif "additional strengths" in lower:
+                current_section = "strengths"
+                continue
 
-Return the resume using EXACTLY this structure.
+            # Store content
+            if current_section == "skills":
 
-# Professional Summary
+                clean_skill = re.sub(r"^[-•*]\s*", "", line)
 
-Write a 4–5 line ATS-friendly summary.
+                if clean_skill:
+                    sections["skills"].append(clean_skill)
 
-# Technical Skills
+            elif current_section:
 
-Return as bullet points.
+                sections[current_section] += line + "\n"
 
-# Professional Experience
-
-Improve the experience section.
-
-# Projects
-
-For every project include:
-
-Project Name
-
-• Description
-
-• Technologies Used
-
-• Key Achievement
-
-# Education
-
-Improve formatting.
-
-# Certifications
-
-Return as bullet points.
-
-# Additional Strengths
-
-Write 3–5 professional strengths suitable for the target role.
-
-Return ONLY the resume.
-"""
-
-        return prompt
+        return sections
