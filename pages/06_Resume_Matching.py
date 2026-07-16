@@ -1,8 +1,19 @@
 import streamlit as st
 
 from utils.pdf_reader import extract_text_from_pdf
-from utils.resume_parser import extract_skills
-from utils.jd_parser import extract_required_skills
+
+from utils.resume_parser import (
+    extract_skills,
+    extract_education,
+    extract_experience
+)
+
+from utils.jd_parser import (
+    extract_required_skills,
+    extract_required_education,
+    extract_required_experience
+)
+
 from utils.matching_engine import calculate_match_score
 
 st.set_page_config(
@@ -11,13 +22,13 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🤝 Resume Matching")
+st.title("🤝 Resume Matching Engine")
 
-st.write("Upload a Resume and a Job Description to compare their skills.")
+st.write("Compare a Resume with a Job Description.")
 
-# -----------------------------
+# -----------------------------------
 # Upload Files
-# -----------------------------
+# -----------------------------------
 
 col1, col2 = st.columns(2)
 
@@ -35,9 +46,9 @@ with col2:
         key="jd"
     )
 
-# -----------------------------
+# -----------------------------------
 # Compare
-# -----------------------------
+# -----------------------------------
 
 if resume_file and jd_file:
 
@@ -45,31 +56,68 @@ if resume_file and jd_file:
     jd_text = extract_text_from_pdf(jd_file)
 
     resume_skills = extract_skills(resume_text)
+    resume_education = extract_education(resume_text)
+    resume_experience = extract_experience(resume_text)
+
     jd_skills = extract_required_skills(jd_text)
+    jd_education = extract_required_education(jd_text)
+    jd_experience = extract_required_experience(jd_text)
 
     result = calculate_match_score(
         resume_skills,
-        jd_skills
+        jd_skills,
+        resume_education,
+        jd_education,
+        resume_experience,
+        jd_experience
     )
 
     st.divider()
 
-    st.subheader("📊 Match Score")
+    # -----------------------------------
+    # Overall Score
+    # -----------------------------------
+
+    st.subheader("📊 Overall Match")
 
     st.metric(
-        "Overall Match",
-        f"{result['score']}%"
+        "Overall Score",
+        f"{result['overall_score']}%"
     )
 
-    st.progress(result["score"] / 100)
+    st.progress(result["overall_score"] / 100)
+
+    st.success(result["recommendation"])
+
+    st.divider()
+
+    # -----------------------------------
+    # Individual Scores
+    # -----------------------------------
+
+    c1, c2, c3 = st.columns(3)
+
+    with c1:
+        st.metric(
+            "📈 Skill Score",
+            f"{result['skill_score']} / 60"
+        )
+
+    with c2:
+        st.metric(
+            "🎓 Education Score",
+            f"{result['education_score']} / 20"
+        )
+
+    with c3:
+        st.metric(
+            "💼 Experience Score",
+            f"{result['experience_score']} / 20"
+        )
 
     st.divider()
 
     left, right = st.columns(2)
-
-    # -----------------------------
-    # Matched Skills
-    # -----------------------------
 
     with left:
 
@@ -80,10 +128,6 @@ if resume_file and jd_file:
                 st.success(skill.title())
         else:
             st.warning("No matched skills.")
-
-    # -----------------------------
-    # Missing Skills
-    # -----------------------------
 
     with right:
 
