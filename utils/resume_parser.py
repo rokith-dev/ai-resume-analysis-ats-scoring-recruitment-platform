@@ -1,5 +1,6 @@
 import re
 import spacy
+import pandas as pd
 
 # Load spaCy English model
 nlp = spacy.load("en_core_web_sm")
@@ -32,7 +33,7 @@ def extract_candidate_details(text):
     email = email_match.group() if email_match else ""
 
     # -------------------------------
-    # Extract Phone Number
+    # Extract Phone
     # -------------------------------
     phone_pattern = r"(\+91[\-\s]?)?[6-9]\d{9}"
 
@@ -45,3 +46,24 @@ def extract_candidate_details(text):
         "Email": email,
         "Phone": phone
     }
+
+
+def extract_skills(text):
+    """
+    Extract skills from resume text.
+    """
+
+    skills_df = pd.read_csv("data/skills.csv", header=None)
+
+    skills_list = skills_df[0].tolist()
+
+    resume_text = text.lower()
+
+    found_skills = []
+
+    for skill in skills_list:
+
+        if skill.lower() in resume_text:
+            found_skills.append(skill)
+
+    return sorted(list(set(found_skills)))
