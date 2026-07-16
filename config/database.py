@@ -1,10 +1,12 @@
-import sqlite3
-from pathlib import Path
-
-from config.config import CONFIG
+import mysql.connector
 
 
-def get_connection(database_path: Path | None = None) -> sqlite3.Connection:
-    path = database_path or CONFIG.database_path
-    path.parent.mkdir(parents=True, exist_ok=True)
-    return sqlite3.connect(path)
+def get_connection():
+    connection = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="root123",
+        database="ai_recruitment"
+    )
+
+    return connection
