@@ -3,69 +3,91 @@ import streamlit as st
 from utils.pdf_reader import extract_text_from_pdf
 from utils.resume_parser import (
     extract_candidate_details,
-    extract_skills
+    extract_skills,
+    extract_education,
+    extract_experience
+)
+
+st.set_page_config(
+    page_title="Resume Analyzer",
+    page_icon="📄",
+    layout="wide"
 )
 
 st.title("📄 Resume Analyzer")
-
-st.write("Upload a PDF resume to analyze candidate details.")
+st.caption("Upload a resume and analyze candidate information.")
 
 uploaded_file = st.file_uploader(
-    "Choose a Resume (PDF)",
+    "Upload Resume (PDF)",
     type=["pdf"]
 )
 
-if uploaded_file is not None:
+if uploaded_file:
 
     st.success("✅ Resume uploaded successfully!")
 
-    # Extract Resume Text
     resume_text = extract_text_from_pdf(uploaded_file)
 
-    # Extract Candidate Information
     candidate = extract_candidate_details(resume_text)
-
-    # Extract Skills
     skills = extract_skills(resume_text)
+    education = extract_education(resume_text)
+    experience = extract_experience(resume_text)
 
-    # -----------------------------
-    # Candidate Information
-    # -----------------------------
+    st.divider()
 
     st.subheader("👤 Candidate Information")
 
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.write("**Name:**", candidate["Name"])
-        st.write("**Email:**", candidate["Email"])
+        st.metric("Name", candidate["Name"] if candidate["Name"] else "Not Found")
 
     with col2:
-        st.write("**Phone:**", candidate["Phone"])
+        st.metric("Email", candidate["Email"] if candidate["Email"] else "Not Found")
 
-    # -----------------------------
-    # Skills
-    # -----------------------------
-
-    st.divider()
-
-    st.subheader("🛠 Skills")
-
-    if skills:
-        st.success(", ".join(skills))
-    else:
-        st.warning("No skills detected.")
-
-    # -----------------------------
-    # Resume Text
-    # -----------------------------
+    with col3:
+        st.metric("Phone", candidate["Phone"] if candidate["Phone"] else "Not Found")
 
     st.divider()
 
-    st.subheader("📄 Resume Text")
+    left, right = st.columns(2)
+
+    with left:
+
+        st.subheader("🛠 Skills")
+
+        if skills:
+            for skill in skills:
+                st.success(skill)
+        else:
+            st.warning("No skills detected.")
+
+    with right:
+
+        st.subheader("🎓 Education")
+
+        if education:
+            for degree in education:
+                st.info(degree)
+        else:
+            st.warning("No education detected.")
+
+    st.divider()
+
+    st.subheader("💼 Experience")
 
     st.text_area(
-        "Extracted Resume",
-        resume_text,
-        height=400
+        "Experience Details",
+        experience,
+        height=200
     )
+
+    st.divider()
+
+    with st.expander("📄 View Complete Resume"):
+
+        st.text_area(
+            "Resume Text",
+            resume_text,
+            height=350
+        )
