@@ -1,3 +1,6 @@
+import json
+
+
 def build_resume_prompt(
     name,
     email,
@@ -9,24 +12,62 @@ def build_resume_prompt(
     projects,
     certifications
 ):
-    """
-    Build a prompt for AI Resume Generation.
-    """
 
     prompt = f"""
-You are an expert Resume Writer.
+You are an expert ATS Resume Writer.
 
-Generate a professional ATS-friendly resume.
+Generate ONLY valid JSON.
+
+Do not return Markdown.
+Do not return explanations.
+Do not wrap the JSON inside code blocks.
+
+Return exactly this structure:
+
+{{
+    "name":"",
+    "email":"",
+    "phone":"",
+    "target_role":"",
+    "summary":"",
+    "skills":[],
+    "projects":[
+        {{
+            "title":"",
+            "description":""
+        }}
+    ],
+    "education":[
+        {{
+            "degree":"",
+            "institution":"",
+            "cgpa":""
+        }}
+    ],
+    "experience":[
+        {{
+            "company":"",
+            "role":"",
+            "duration":"",
+            "description":""
+        }}
+    ],
+    "certifications":[]
+}}
 
 Candidate Information
 
-Name: {name}
+Name:
+{name}
 
-Email: {email}
+Email:
+{email}
 
-Phone: {phone}
+Phone:
+{phone}
 
-Target Role: {target_role}
+Target Role:
+{target_role}
 
 Education:
 {education}
@@ -43,15 +84,11 @@ Projects:
 Certifications:
 {certifications}
 
-Instructions
+Rewrite the information professionally.
 
-1. Write a professional summary.
-2. Improve project descriptions.
-3. Improve experience descriptions.
-4. Highlight technical skills.
-5. Keep the resume ATS-friendly.
-6. Use professional formatting.
-7. Do not invent information.
+Do not invent fake information.
+
+Return JSON only.
 """
 
     return prompt

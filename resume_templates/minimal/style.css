@@ -1,0 +1,25 @@
+:root {
+    font-family: Georgia, serif;
+    color-scheme: light;
+}
+
+body {
+    margin: 0;
+    background: #ffffff;
+    color: #111111;
+}
+
+.resume {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 56px;
+}
+
+h1, h2 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+p {
+    line-height: 1.6;
+}

@@ -1,0 +1,29 @@
+:root {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color-scheme: light;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 100%);
+    color: #0f172a;
+}
+
+.resume {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    max-width: 900px;
+    margin: 0 auto;
+    min-height: 100vh;
+}
+
+.sidebar {
+    padding: 40px;
+    background: #0f172a;
+    color: #f8fafc;
+}
+
+.content {
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.9);
+}
