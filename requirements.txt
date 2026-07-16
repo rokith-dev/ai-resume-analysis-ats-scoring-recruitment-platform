@@ -1,0 +1,12 @@
+streamlit
+pandas
+numpy
+scikit-learn
+python-dotenv
+PyPDF2
+pdfplumber
+python-docx
+matplotlib
+seaborn
+reportlab
+openpyxl

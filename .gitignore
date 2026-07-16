@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv/
+venv/
+.env.*
+streamlit_app.log
+data/resumes/*
+data/job_descriptions/*
+data/generated_resumes/*
+data/processed/*
+reports/pdf/*
+reports/csv/*
+reports/excel/*
+database/recruitment.db
