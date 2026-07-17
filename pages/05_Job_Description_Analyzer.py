@@ -9,6 +9,8 @@ from utils.jd_parser import (
     extract_required_experience
 )
 
+from database.job_db import add_job
+
 st.set_page_config(
     page_title="Job Description Analyzer",
     page_icon="💼",
@@ -28,7 +30,7 @@ if uploaded_file:
 
     st.success("✅ Job Description uploaded successfully!")
 
-    # Extract text
+    # Extract Text
     jd_text = extract_text_from_pdf(uploaded_file)
 
     # Analyze
@@ -36,6 +38,15 @@ if uploaded_file:
     skills = extract_required_skills(jd_text)
     education = extract_required_education(jd_text)
     experience = extract_required_experience(jd_text)
+
+    # Save to Database
+    job_id = add_job(
+        job_title=job_title,
+        company="Not Specified",
+        description=jd_text
+    )
+
+    st.success(f"✅ Job Description Saved Successfully (Job ID : {job_id})")
 
     st.divider()
 
@@ -51,31 +62,36 @@ if uploaded_file:
 
     left, right = st.columns(2)
 
-    # Skills
     with left:
 
         st.subheader("🛠 Required Skills")
 
         if skills:
+
             for skill in skills:
+
                 st.success(skill)
+
         else:
+
             st.warning("No skills detected.")
 
-    # Education
     with right:
 
         st.subheader("🎓 Required Education")
 
         if education:
+
             for degree in education:
+
                 st.info(degree)
+
         else:
+
             st.warning("No education detected.")
 
     st.divider()
 
-    # Experience
     st.subheader("📅 Required Experience")
 
     st.metric(
@@ -85,7 +101,6 @@ if uploaded_file:
 
     st.divider()
 
-    # Complete JD
     with st.expander("📄 View Complete Job Description"):
 
         st.text_area(
