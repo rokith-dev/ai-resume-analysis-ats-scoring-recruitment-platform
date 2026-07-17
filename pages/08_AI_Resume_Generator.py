@@ -3,6 +3,7 @@ import streamlit as st
 from utils.prompt_builder import build_resume_prompt
 from utils.groq_client import generate_response
 from utils.pdf_generator import generate_resume_pdf
+from utils.resume_preview import show_resume_preview
 
 st.set_page_config(
     page_title="AI Resume Generator",
@@ -110,49 +111,36 @@ if generate:
             try:
 
                 prompt = build_resume_prompt(
-
                     name=name,
-
                     email=email,
-
                     phone=phone,
-
                     target_role=target_role,
-
                     education=education,
-
                     skills=skills,
-
                     experience=experience,
-
                     projects=projects,
-
                     certifications=certifications
-
                 )
 
                 resume = generate_response(prompt)
 
                 st.success("✅ Resume Generated Successfully!")
 
-                st.divider()
-
-                st.subheader("📄 AI Generated Resume")
-
-                st.markdown(resume)
+                show_resume_preview(
+                    name=name,
+                    email=email,
+                    phone=phone,
+                    target_role=target_role,
+                    resume=resume
+                )
 
                 pdf = generate_resume_pdf(resume)
 
                 st.download_button(
-
                     label="📥 Download Resume (PDF)",
-
                     data=pdf,
-
                     file_name=f"{name.replace(' ','_')}_Resume.pdf",
-
                     mime="application/pdf"
-
                 )
 
             except Exception as e:

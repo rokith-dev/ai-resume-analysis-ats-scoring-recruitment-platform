@@ -3,54 +3,53 @@ from jinja2 import Environment, FileSystemLoader
 
 
 class ResumeRenderer:
-    """
-    Render a resume using an HTML template.
-    """
 
     def __init__(self, template_name="ats"):
 
-        template_folder = Path(
-            f"resume_builder/templates/{template_name}"
-        )
+        template_path = Path(f"resume_templates/{template_name}")
 
         self.env = Environment(
-            loader=FileSystemLoader(template_folder)
+            loader=FileSystemLoader(template_path)
         )
 
         self.template = self.env.get_template("template.html")
 
     def render(
         self,
-        personal_info,
-        sections
+        name,
+        email,
+        phone,
+        target_role,
+        summary,
+        skills,
+        projects,
+        experience,
+        education,
+        certifications,
     ):
 
-        return self.template.render(
+        html = self.template.render(
 
-            name=personal_info["name"],
+            name=name,
 
-            email=personal_info["email"],
+            email=email,
 
-            phone=personal_info["phone"],
+            phone=phone,
 
-            linkedin=personal_info.get("linkedin", ""),
+            target_role=target_role,
 
-            github=personal_info.get("github", ""),
+            summary=summary,
 
-            target_role=personal_info["target_role"],
+            skills=skills,
 
-            summary=sections["summary"],
+            projects=projects,
 
-            skills=sections["skills"],
+            experience=experience,
 
-            experience=sections["experience"],
+            education=education,
 
-            projects=sections["projects"],
-
-            education=sections["education"],
-
-            certifications=sections["certifications"],
-
-            strengths=sections["strengths"]
+            certifications=certifications
 
         )
+
+        return html

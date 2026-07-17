@@ -1,6 +1,3 @@
-import json
-
-
 def build_resume_prompt(
     name,
     email,
@@ -13,82 +10,84 @@ def build_resume_prompt(
     certifications
 ):
 
-    prompt = f"""
+    return f"""
 You are an expert ATS Resume Writer.
 
-Generate ONLY valid JSON.
+Create a professional ATS-friendly resume.
 
-Do not return Markdown.
-Do not return explanations.
-Do not wrap the JSON inside code blocks.
+Rules:
 
-Return exactly this structure:
-
-{{
-    "name":"",
-    "email":"",
-    "phone":"",
-    "target_role":"",
-    "summary":"",
-    "skills":[],
-    "projects":[
-        {{
-            "title":"",
-            "description":""
-        }}
-    ],
-    "education":[
-        {{
-            "degree":"",
-            "institution":"",
-            "cgpa":""
-        }}
-    ],
-    "experience":[
-        {{
-            "company":"",
-            "role":"",
-            "duration":"",
-            "description":""
-        }}
-    ],
-    "certifications":[]
-}}
+- Do NOT invent information.
+- Improve grammar.
+- Improve wording.
+- Use professional language.
+- Keep it ATS-friendly.
+- Return the resume in Markdown.
 
 Candidate Information
 
-Name:
-{name}
+Name: {name}
 
-Email:
-{email}
+Email: {email}
 
-Phone:
-{phone}
+Phone: {phone}
 
-Target Role:
-{target_role}
+Target Role: {target_role}
 
 Education:
+
 {education}
 
 Skills:
+
 {skills}
 
 Experience:
+
 {experience}
 
 Projects:
+
 {projects}
 
 Certifications:
+
 {certifications}
 
-Rewrite the information professionally.
+Return exactly in this format:
 
-Do not invent fake information.
+# {name}
 
-Return JSON only.
+## {target_role}
+
+Email: {email}
+
+Phone: {phone}
+
+# Professional Summary
+
+Write a professional summary.
+
+# Technical Skills
+
+- Skill 1
+- Skill 2
+
+# Projects
+
+Project Name
+
+Description
+
+# Experience
+
+...
+
+# Education
+
+...
+
+# Certifications
+
+...
 """
-
-    return prompt

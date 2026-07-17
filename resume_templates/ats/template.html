@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 
@@ -15,20 +15,23 @@
 
 <div class="resume">
 
-    <div class="header">
+    <header>
 
         <h1>{{ name }}</h1>
 
         <h3>{{ target_role }}</h3>
 
         <p>
-            {{ email }} |
+
+            {{ email }}
+
+            |
+
             {{ phone }}
+
         </p>
 
-    </div>
-
-    <hr>
+    </header>
 
     <section>
 
@@ -38,73 +41,51 @@
 
     </section>
 
-    <hr>
-
     <section>
 
         <h2>Technical Skills</h2>
 
         <ul>
 
-            {% for skill in skills %}
+        {% for skill in skills %}
 
             <li>{{ skill }}</li>
 
-            {% endfor %}
+        {% endfor %}
 
         </ul>
 
     </section>
-
-    <hr>
 
     <section>
 
         <h2>Projects</h2>
 
-        {% for project in projects %}
-
-        <h4>{{ project.title }}</h4>
-
-        <p>{{ project.description }}</p>
-
-        {% endfor %}
+        {{ projects | safe }}
 
     </section>
 
-    <hr>
+    <section>
+
+        <h2>Experience</h2>
+
+        {{ experience | safe }}
+
+    </section>
 
     <section>
 
         <h2>Education</h2>
 
-        {% for edu in education %}
-
-        <h4>{{ edu.degree }}</h4>
-
-        <p>{{ edu.institution }}</p>
-
-        <p>{{ edu.cgpa }}</p>
-
-        {% endfor %}
+        {{ education | safe }}
 
     </section>
-
-    <hr>
 
     <section>
 
         <h2>Certifications</h2>
 
-        <ul>
-
-            {% for cert in certifications %}
-
-            <li>{{ cert }}</li>
-
-            {% endfor %}
-
-        </ul>
+        {{ certifications | safe }}
 
     </section>
 

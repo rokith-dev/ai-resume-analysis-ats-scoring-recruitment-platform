@@ -6,11 +6,8 @@ def show_resume_preview(
     email,
     phone,
     target_role,
-    resume_text
+    resume
 ):
-    """
-    Display a professional resume preview.
-    """
 
     st.markdown("---")
 
@@ -20,10 +17,12 @@ def show_resume_preview(
 
 ### {target_role}
 
-📧 **{email}** | 📱 **{phone}**
+📧 **{email}**
+
+📱 **{phone}**
 """
     )
 
     st.markdown("---")
 
-    st.markdown(resume_text)
+    st.markdown(resume)
