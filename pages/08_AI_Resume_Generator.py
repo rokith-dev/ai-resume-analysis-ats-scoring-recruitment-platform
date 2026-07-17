@@ -4,6 +4,8 @@ from utils.prompt_builder import build_resume_prompt
 from utils.groq_client import generate_response
 from utils.pdf_generator import generate_resume_pdf
 from utils.resume_preview import show_resume_preview
+from database.candidate_db import add_candidate
+from database.resume_db import save_resume
 
 st.set_page_config(
     page_title="AI Resume Generator",
@@ -122,7 +124,19 @@ if generate:
                     certifications=certifications
                 )
 
+                candidate_id = add_candidate(
+                    name=name,
+                    email=email,
+                    phone=phone,
+                    target_role=target_role
+                )
+
                 resume = generate_response(prompt)
+
+                save_resume(
+                    candidate_id,
+                    resume
+                )
 
                 st.success("✅ Resume Generated Successfully!")
 
